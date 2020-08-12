@@ -2,6 +2,8 @@
 # encoding: utf-8
 import re
 import logging
+import requests
+from pyDes import des, PAD_PKCS5, ECB
 
 from django import forms
 from django.core.mail import send_mail
@@ -27,6 +29,7 @@ from seahub.utils import is_user_password_strong, get_site_name, \
 from seahub.utils.mail import send_html_email_with_dj_template, MAIL_PRIORITY
 from seahub.utils.licenseparse import user_number_over_limit
 from seahub.share.models import ExtraSharePermission
+from seahub.settings import CAS_SERVER_URL, CAS_3DES_KEY
 
 try:
     from seahub.settings import CLOUD_MODE
@@ -573,6 +576,28 @@ class AuthBackend(object):
         return user
 
     def authenticate(self, username=None, password=None):
+        user = self.get_user(username)
+        if not user:
+            return None
+
+        if user.check_password(password):
+            return user
+
+class ShenHangCASAPIBackend(object):
+    def get_user(self, username):
+        try:
+            user = User.objects.get(username)
+        except User.DoesNotExist:
+            user = None
+        return user
+
+    def authenticate(self, username=None, password=None):
+
+        requests.post(url=CAS_SERVER_URL)
+
+
+
+
         user = self.get_user(username)
         if not user:
             return None

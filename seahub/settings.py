@@ -271,6 +271,7 @@ CONSTANCE_DATABASE_CACHE_BACKEND = 'default'
 
 AUTHENTICATION_BACKENDS = (
     'seahub.base.accounts.AuthBackend',
+    'seahub.base.accounts.ShenHangCASAPIBackend',
 )
 
 ENABLE_OAUTH = False
